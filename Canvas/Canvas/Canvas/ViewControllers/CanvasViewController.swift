@@ -77,11 +77,29 @@ class CanvasViewController: UIViewController {
             // Attach it to a view of your choice. If it's a UIImageView, remember to enable user interaction
             newlyCreatedFace.isUserInteractionEnabled = true
             newlyCreatedFace.addGestureRecognizer(panGestureRecognizer)
+            
+            // The didTap: method will be defined in Step 3 below.
+            let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTap(sender:)))
+            
+            // Optionally set the number of required taps, e.g., 2 for a double click
+            tapGestureRecognizer.numberOfTapsRequired = 2
+            
+            // Attach it to a view of your choice. If it's a UIImageView, remember to enable user interaction
+            newlyCreatedFace.addGestureRecognizer(tapGestureRecognizer)
+            
+            UIView.animate(withDuration:0.4, animations: {
+                self.newlyCreatedFace.transform = CGAffineTransform(scaleX: 2, y: 2)
+                self.newlyCreatedFace.transform = self.newlyCreatedFace.transform.scaledBy(x: 1, y: 1)
+            }, completion: nil)
         } else if sender.state == .changed {
             print("Gesture is changing")
             newlyCreatedFace.center = CGPoint(x: newlyCreatedFaceOriginalCenter.x + translation.x, y: newlyCreatedFaceOriginalCenter.y + translation.y)
         } else if sender.state == .ended {
             print("Gesture ended")
+            UIView.animate(withDuration:0.4, animations: {
+                self.newlyCreatedFace.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
+                self.newlyCreatedFace.transform = self.newlyCreatedFace.transform.scaledBy(x: 1, y: 1)
+            }, completion: nil)
         }
     }
     
@@ -98,5 +116,9 @@ class CanvasViewController: UIViewController {
         } else if sender.state == .ended {
             print("Gesture ended")
         }
+    }
+    
+    @objc func didTap(sender: UITapGestureRecognizer) {
+        newlyCreatedFace.removeFromSuperview()
     }
 }
